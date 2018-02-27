@@ -14,7 +14,7 @@
     var ARG_PADDING = "-p";
 
     var DEFAULT_PADDING = 3;
-    var DEFAULT_OUTPUT_FILE = "output/test.txt";
+    var DEFAULT_OUTPUT_FILE = "tmp/test.txt";
 
     loadPadEnd();
 
