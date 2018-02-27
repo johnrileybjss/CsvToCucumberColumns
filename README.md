@@ -16,3 +16,28 @@ This is a simple utility written in Node.js which converts a CSV file to Cucumbe
 * -i = Relative path of the input file to be read (required).
 * -o = Relative path of the output file to be written to (optional, default is output/test.txt).
 * -p = Number of spaces to pad the end of each string field with (optional, default is 3).
+
+# Sample
+
+## Sample Input
+*test/input.csv*
+```
+column1,column2,column3
+a,b,c
+1,NULL,3
+Test,This,Data
+```
+
+## Sample Command
+`node src/js/convert.js -i test/input.csv -o tmp/test.txt -p 4`
+
+## Sample Output
+```
+| column1    | column2    | column3    |
+| a          | b          | c          |
+| 1          |            | 3          |
+| Test       | This       | Data       |
+
+```
+
+
