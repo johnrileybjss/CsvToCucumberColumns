@@ -1,0 +1,11 @@
+{
+  "name": "CSV-To-Cucumber-Columns",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A project for converting a CSV file to Cucumber Columnar Format",
+  "license": "MIT",
+  "dependencies": {
+    "csvtojson": "^1.1.9",
+    "underscore": "^1.8.3"
+  }
+}
