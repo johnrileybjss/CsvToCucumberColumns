@@ -32,6 +32,7 @@ Test,This,Data
 `node src/js/convert.js -i test/input.csv -o tmp/test.txt -p 4`
 
 ## Sample Output
+*tmp/test.txt*
 ```
 | column1    | column2    | column3    |
 | a          | b          | c          |
