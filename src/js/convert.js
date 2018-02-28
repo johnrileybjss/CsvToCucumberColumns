@@ -18,6 +18,7 @@
     var DEFAULT_PADDING = 3;
     var DEFAULT_OUTPUT_FILE = "tmp/test.txt";
 
+    // Loads the Polyfill for the String.prototype.padEnd function
     loadPadEnd();
 
     // Validate the Number of Arguments
