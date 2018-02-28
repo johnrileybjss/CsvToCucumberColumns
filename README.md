@@ -13,6 +13,8 @@ required node modules.
 `node src/js/convert.js -i /relative/path/to/input-file.csv -o /relative/path/to/output-file.txt`
 ## Specify Padding
 `node src/js/convert.js -i /relative/path/to/input-file.csv -p 4`
+## Specify Verbose mode
+`node src/js/convert.js -i /relative/path/to/input-file.csv -v`
 
 # Arguments
 
