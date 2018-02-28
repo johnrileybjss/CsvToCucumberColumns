@@ -1,8 +1,6 @@
 'use strict';
 
 (function(){
-
-
     var _ = require('underscore');
     var fs = require('fs');
     var csv = require('csvtojson');
@@ -23,6 +21,10 @@
     }
 
     var args = loadArgsObject();
+    if(!fs.existsSync(args.inputFile)) {
+        console.log('Input file does not exist: ' + args.inputFile);
+        return;
+    }
 
     console.log("Attempting to parse file: " + args.inputFile);
 
@@ -52,15 +54,9 @@
         console.log('Computing Field Lengths for CSV Columns...');
         var sizeMap = computeSizeMap(headerRow, rows, args.padding);
 
-        console.log('Finished computing field lengths.');
-        console.log(sizeMap);
-
         console.log('Generating padded output...');
 
         var paddedOutput = applyPaddedFieldLengths(headerRow, rows, sizeMap);
-
-        console.log('Padded Output Generated');
-        console.log(paddedOutput);
 
         console.log('Generating Cucumber Columns from Padded Output...');
         var cucumberArray = generateCucumberArray(headerRow, paddedOutput);
@@ -78,7 +74,7 @@
 
         file.end();
 
-        console.log('File Written.');
+        console.log('File Written. End of program.');
     });
 
     function validateArgs(){
