@@ -7,6 +7,10 @@
 
     var NULL_STR = 'NULL';
 
+    var EXT_CSV = 'csv';
+    var EXT_XLS = 'xls';
+    var EXT_XLSX = 'xlsx';
+
     var ARG_INPUT = "-i";
     var ARG_OUTPUT = "-o";
     var ARG_PADDING = "-p";
@@ -16,17 +20,31 @@
 
     loadPadEnd();
 
+    // Validate the Number of Arguments
     if(!validateArgs()){
         return;
     }
 
+    // Loads the Arguments and Validates that there is an Input File argument
     var args = loadArgsObject();
-    if(!fs.existsSync(args.inputFile)) {
-        console.log('Input file does not exist: ' + args.inputFile);
+    if(!args.inputFile){
+        console.log("Error: No input file provided. Please provide an input file by using the -i flag and specifying the relative path of the file you'd like to use.");
         return;
     }
 
-    console.log("Attempting to parse file: " + args.inputFile);
+    // Validates the Extension of the Input File
+    var inputExtension = args.inputFile.split('.').pop();
+    if(!validateExtension(inputExtension)){
+        return;
+    }
+
+    // Validates that the Input File Exists
+    if(!fs.existsSync(args.inputFile)) {
+        console.log('Error: Input file does not exist: ' + args.inputFile);
+        return;
+    }
+
+    console.log("Attempting to parse file for csv data: " + args.inputFile);
 
     var headerRow;
     var rows = [];
@@ -34,8 +52,6 @@
     .on('header', function(header){
         if(header){
             headerRow = header;
-            console.log('Found Header');
-            console.log(header);
         }
     })
     .on('json', function(jsonObj){
@@ -51,14 +67,14 @@
         console.log('Sanitizing Null Strings...');
         rows = sanitizeNullStrings(headerRow, rows);
 
-        console.log('Computing Field Lengths for CSV Columns...');
+        console.log('Computing Minimum Field Lengths for CSV Columns...');
         var sizeMap = computeSizeMap(headerRow, rows, args.padding);
 
-        console.log('Generating padded output...');
+        console.log('Generating Padded Strings...');
 
         var paddedOutput = applyPaddedFieldLengths(headerRow, rows, sizeMap);
 
-        console.log('Generating Cucumber Columns from Padded Output...');
+        console.log('Generating Cucumber Columns from Padded Strings...');
         var cucumberArray = generateCucumberArray(headerRow, paddedOutput);
 
         console.log('Cucumber Columns Generated. Writing to output file: ' + args.outputFile);
@@ -84,6 +100,25 @@
         }
         else if(process.argv.length % 2 !== 0){
             console.log('Invalid number of arguments provided.');
+            return false;
+        }
+
+        return true;
+    }
+
+    function validateExtension(inputExtension){
+        if(!inputExtension){
+            console.log('Error: The input file provided is not a CSV file. Please provide a file with the .csv extension.');
+            return false;
+        }
+        else if(inputExtension === EXT_XLS || inputExtension === EXT_XLSX){
+            console.log('Error: This script has detected that the input file provided is a Microsoft Excel file. '
+                + 'This file is not directly compatible with this script. Please convert your file to a CSV file and '
+                + 'use the exported CSV as your new input file.');
+            return false;
+        }
+        else if(inputExtension !== EXT_CSV){
+            console.log('Error: The input file provided is not a CSV file. Please provide a file with the .csv extension.');
             return false;
         }
 
