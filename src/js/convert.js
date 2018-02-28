@@ -5,7 +5,8 @@
     var fs = require('fs');
     var csv = require('csvtojson');
 
-    var NULL_STR = 'NULL';
+    var STR_NULL = 'NULL';
+    var STR_DIV = '\n---------------------------------\n';
 
     var EXT_CSV = 'csv';
     var EXT_XLS = 'xls';
@@ -14,6 +15,7 @@
     var ARG_INPUT = "-i";
     var ARG_OUTPUT = "-o";
     var ARG_PADDING = "-p";
+    var ARG_VERBOSE = "-v";
 
     var DEFAULT_PADDING = 3;
     var DEFAULT_OUTPUT_FILE = "tmp/test.txt";
@@ -68,17 +70,45 @@
         console.log('Sanitizing Null Strings...');
         rows = sanitizeNullStrings(headerRow, rows);
 
+        if(args.isVerbose){
+            _.each(rows, function(row){
+                console.log(row);
+            });
+            console.log(STR_DIV);
+        }
+
         console.log('Computing Minimum Field Lengths for CSV Columns...');
         var sizeMap = computeSizeMap(headerRow, rows, args.padding);
+
+        if(args.isVerbose){
+            console.log(sizeMap);
+            console.log(STR_DIV);
+        }
 
         console.log('Generating Padded Strings...');
 
         var paddedOutput = applyPaddedFieldLengths(headerRow, rows, sizeMap);
 
+        if(args.isVerbose){
+            _.each(paddedOutput, function(item){
+                console.log(item);
+            });
+            console.log(STR_DIV);
+        }
+
         console.log('Generating Cucumber Columns from Padded Strings...');
         var cucumberArray = generateCucumberArray(headerRow, paddedOutput);
 
-        console.log('Cucumber Columns Generated. Writing to output file: ' + args.outputFile);
+        console.log('Cucumber Columns Generated.');
+
+        if(args.isVerbose){
+            _.each(cucumberArray, function(row){
+                console.log(row);
+            });
+            console.log(STR_DIV);
+        }
+
+        console.log('Writing to output file: ' + args.outputFile);
 
         var file = fs.createWriteStream(args.outputFile);
         file.on('error', function(err){
@@ -97,10 +127,6 @@
     function validateArgs(){
         if(process.argv.length < 3){
             console.log("No arguments provided. Please provide the relative path of the file you would like to convert.");
-            return false;
-        }
-        else if(process.argv.length % 2 !== 0){
-            console.log('Invalid number of arguments provided.');
             return false;
         }
 
@@ -140,6 +166,10 @@
                     break;
                 case ARG_PADDING:
                     output.padding = args[i + 1];
+                    break;
+                case ARG_VERBOSE:
+                    output.isVerbose = true;
+                    i--;
                     break;
                 default:
                     console.log('Invalid Argument Detected: ' + args[i]);
@@ -185,7 +215,7 @@
 
         _.each(rows, function(row){
             _.each(headerRow, function(key){
-                if(row[key] === NULL_STR){
+                if(row[key] === STR_NULL){
                     row[key] = ' ';
                 }
             });

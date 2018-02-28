@@ -19,6 +19,7 @@ required node modules.
 * -i = Relative path of the input file to be read (required).
 * -o = Relative path of the output file to be written to (optional, default is output/test.txt).
 * -p = Number of spaces to pad the end of each string field with (optional, default is 3).
+* -v = Indicates to run the script in verbose mode. Displays more information about the script as it runs.
 
 # Sample
 
