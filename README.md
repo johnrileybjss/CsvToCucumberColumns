@@ -4,6 +4,9 @@
 This is a simple utility written in Node.js which converts a CSV file to Cucumber Columnar format
 
 # Usage
+Note: On first time use, make sure to run `npm install` from the main directory of the project, in order to load the
+required node modules.
+
 ## Basic Usage
 `node src/js/convert.js -i /relative/path/to/input-file.csv`
 ## Specify Output File
